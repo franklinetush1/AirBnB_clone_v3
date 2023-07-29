@@ -8,8 +8,8 @@ from models import storage
 def stat():
     """Returns the status"""
     if request.method == 'GET':
-        resp = {"status": "OK"}
-        return jsonify(resp)
+        r = {"status": "OK"}
+        return jsonify(r)
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
