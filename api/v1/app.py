@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""Flask App that integrates with AirBnB static"""
 from flask import Flask
 from flask import sql_alchemy
 from models import storage
