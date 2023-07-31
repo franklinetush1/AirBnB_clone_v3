@@ -9,7 +9,7 @@ from models.review import Review
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
-def reviews(place_id):
+def review(place_id):
     """ Gets a list of all Reviews"""
     place = storage.get("Place", place_id)
     if not place:
@@ -18,7 +18,7 @@ def reviews(place_id):
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
-def r_review_id(review_id):
+def with_review_id(review_id):
     """ Retrieves a Review"""
     review = storage.get("Review", review_id)
     if not review:
@@ -60,17 +60,17 @@ def put_review(review_id):
     if not body_request:
         abort(400, "Not a JSON")
 
-    for k, v in body_request.items():
-        if k not in ['id', 'user_id', 'place_id',
+    for key, value in body_request.items():
+        if key not in ['id', 'user_id', 'place_id',
                      'created_at', 'updated_at']:
-            setattr(review, k, v)
+            setattr(review, key, value)
 
     storage.save()
     return make_response(jsonify(review.to_dict()), 200)
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'],
                  strict_slashes=False)
-def del_review(review_id):
+def delete_review(review_id):
     """Deletes a Review"""
     review = storage.get("Review", review_id)
     if not review:
