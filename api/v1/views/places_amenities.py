@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Returns json status response"""
+"""Returns a status response"""
 from models import storage, CNC
 from os import environ
 from api.v1.views import app_views

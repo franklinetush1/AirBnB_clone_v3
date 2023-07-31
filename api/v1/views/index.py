@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Returns json status response"""
+"""Returns a status response"""
 from api.v1.views import app_views
 from flask import jsonify, request
 from models import storage

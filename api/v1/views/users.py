@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" View for User objects that handles default API actions """
+"""Configuration for User objects """
 
 from models import storage
 from models.user import User

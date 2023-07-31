@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" View for State objects that handles default API actions """
+""" Configuration for State objects"""
 from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
 from models import storage
@@ -18,7 +18,7 @@ def with_state_id(state_id):
     state = storage.get("State", state_id)
     if state is None:
         abort(404, 'Not found')
-	return jsonify(state.to_json())
+    return jsonify(state.to_json())
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
