@@ -8,16 +8,17 @@ from models import storage
 def stat():
     """Returns the status"""
     if request.method == 'GET':
-        r = {"status": "OK"}
-        return jsonify(r)
+        req = {"status": "OK"}
+        return jsonify(req)
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
     """Count of all class objects"""
     if request.method == 'GET':
         return jsonify(amenities=storage.count("Amenity"),
-                   cities=storage.count("City"),
-                   places=storage.count("Place"),
-                   reviews=storage.count("Review"),
-                   states=storage.count("State"),
-                   users=storage.count("User"))
+                       reviews=storage.count("Review"),
+                       states=storage.count("State"),
+                       users=storage.count("User"),
+                       cities=storage.count("City"),
+                       places=storage.count("Place"))
+                   
