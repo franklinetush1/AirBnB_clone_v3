@@ -87,18 +87,18 @@ def create_city(state_id):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def update_place(place_id):
     """Updates a Place object."""
-    target_place = storage.get("Place", place_id)
-    if not target_place:
+    place = storage.get("Place", place_id)
+    if not place:
         abort(404)
 
     request_data = request.get_json()
     if not request_data:
-        abort(400, "Invalid data. Request data must be in JSON format.")
+        abort(400, "Invalid data. Not a JSON.")
 
-    allowed_fields = ['name', 'description', 'price', 'other_field']
-    for field, value in request_data.items():
-        if field in allowed_fields:
-            setattr(target_place, field, value)
+    disallowed_fields = ['id', 'user_id', 'city_at', 'created_at', 'updated_at']
+    for key, value in request_data.items():
+        if key not in disallowed_fields:
+            setattr(place, key, value)
 
     storage.save()
-    return jsonify(target_place.to_dict()), 200
+    return jsonify(place.to_dict()), 200
