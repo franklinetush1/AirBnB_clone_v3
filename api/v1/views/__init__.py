@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Initialize app"""
+"""Initialize AirBnB app"""
 
 from flask import Blueprint
 from api.v1.views.index import *
