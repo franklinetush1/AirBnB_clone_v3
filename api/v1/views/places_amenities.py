@@ -7,29 +7,29 @@ from flask import abort, jsonify, request
 STORAGE_TYPE = environ.get('HBNB_TYPE_STORAGE')
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['DELETE', 'POST'])
-def amenity_to_place(place_id=None, amenity_id=None):
-    """Handles HTTP methods for adding/removing amenities"""
-    place_obj = storage.get('Place', place_id)
-    amenity_obj = storage.get('Amenity', amenity_id)
+def manage_amenity(place_id=None, amenity_id=None):
+    """Handles HTTP methods for adding/removing amenities."""
+    place = storage.get('Place', place_id)
+    amenity = storage.get('Amenity', amenity_id)
 
-    if not place_obj or not amenity_obj:
-        abort(404, 'Not found')
+    if not place or not amenity:
+        abort(404, 'Place or Amenity not found.')
 
     if request.method == 'DELETE':
-        if amenity_obj not in place_obj.amenities:
-            abort(404, 'Not found')
+        if amenity not in place.amenities:
+            abort(404, 'Amenity not associated with the place.')
 
-        place_obj.amenities.remove(amenity_obj)
-        place_obj.save()
+        place.amenities.remove(amenity)
+        place.save()
         return jsonify({}), 200
 
     if request.method == 'POST':
-        if amenity_obj in place_obj.amenities:
-            return jsonify(amenity_obj.to_json()), 200
+        if amenity in place.amenities:
+            return jsonify(amenity.to_json()), 200
 
-        place_obj.amenities.append(amenity_obj)
-        place_obj.save()
-        return jsonify(amenity_obj.to_json()), 201
+        place.amenities.append(amenity)
+        place.save()
+        return jsonify(amenity.to_json()), 201
 
 
 @app_views.route('/places/<place_id>/amenities', methods=['GET'])
