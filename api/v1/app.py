@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Flask App """
 from flask import Flask,make_response,jsonify
-from flask_sqlalchemy import SQLAlchemy
 from models import storage
 from api.v1.views import app_views
 from flask_cors import CORS
