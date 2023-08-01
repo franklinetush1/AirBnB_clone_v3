@@ -72,7 +72,7 @@ class DBStorage:
         self.__session = Session
 
     def get(self, cls, id):
-        """Returns the object based on the class and its ID"""
+		"""Returns the object based on the class and its ID"""
         if cls and id:
             get = f"{cls}.{id}"
             obj_all = self.all(cls)
