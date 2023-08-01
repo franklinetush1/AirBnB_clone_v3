@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ Handles default API actions """
+
+
 from models import storage
 from models.amenity import Amenity
 from api.v1.views import app_views
