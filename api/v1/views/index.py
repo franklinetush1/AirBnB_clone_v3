@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Retrieves the number of each objects by type:"""
+
 from api.v1.views import app_views
 from flask import jsonify, request
 from models import storage
