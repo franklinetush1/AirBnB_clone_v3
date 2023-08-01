@@ -65,56 +65,40 @@ def post_place(city_id):
     return make_response(jsonify(plc.to_dict()), 201)
 
 
-@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
-def places_search():
-    """Retrieves all Place objects"""
-    body_r = request.get_json()
-    if not body_r or not any(['states', 'cities', 'amenities'] in body_r):
-        places = storage.all(Place).values()
-    else:
-        places = set()
-
-        if body_r.get('states'):
-            states = [storage.get("State", id) for id in body_r.get('states')]
-            for state in states:
-                places.update(state.cities)
-
-        if body_r.get('cities'):
-            cities = [storage.get("City", id) for id in body_r.get('cities')]
-            places.update(cities)
-
-        if not places:
-            places = set(storage.all(Place).values())
-
-        if body_r.get('amenities'):
-            amenity_ids = body_r.get('amenities')
-            amenities = [storage.get("Amenity", id) for id in amenity_ids]
-            places_copy = places.copy()
-            for place in places_copy:
-                place_amenities = set([amenity.id for amenity in place.amenities])
-                if not set(amenity_ids).issubset(place_amenities):
-                    places.remove(place)
-
-    return jsonify([place.to_dict() for place in places])
-
-
-@app_views.route('/places/<place_id>', methods=['PUT'],
-                 strict_slashes=False)
-def put_place(place_id):
-    """ Updates a Place object """
-    place = storage.get("Place", place_id)
-    if not place:
+@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+def create_city(state_id):
+    """Creates a City object."""
+    target_state = storage.get("State", state_id)
+    if not target_state:
         abort(404)
 
-    body_request = request.get_json()
-    if not body_request:
-        abort(400, "Not a JSON")
+    city_data = request.get_json()
+    if not city_data or "name" not in city_data:
+        abort(400, "Invalid data. 'name' field is missing or not provided in JSON.")
 
-    for key, value in body_request.items():
-        if key not in ['id', 'user_id', 'city_at',
-                     'created_at', 'updated_at']:
-            setattr(place, key, value)
+    city_data['state_id'] = state_id
+    new_city = City(**city_data)
+    storage.new(new_city)
+    storage.save()
+
+    return jsonify(new_city.to_dict()), 201
+
+
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
+def update_place(place_id):
+    """Updates a Place object."""
+    target_place = storage.get("Place", place_id)
+    if not target_place:
+        abort(404)
+
+    request_data = request.get_json()
+    if not request_data:
+        abort(400, "Invalid data. Request data must be in JSON format.")
+
+    allowed_fields = ['name', 'description', 'price', 'other_field']
+    for field, value in request_data.items():
+        if field in allowed_fields:
+            setattr(target_place, field, value)
 
     storage.save()
-    return make_response(jsonify(place.to_dict()), 200)
-
+    return jsonify(target_place.to_dict()), 200
