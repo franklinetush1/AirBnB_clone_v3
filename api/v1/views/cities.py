@@ -56,20 +56,20 @@ def put_city(city_id):
     storage.save()
     return make_response(jsonify(city.to_dict()), 200)
 
-@app_views.route('/states/<state_id>/cities', methods=['POST'],
-                 strict_slashes=False)
-def update_city(state_id):
-    """ Creates a City object """
+@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+def create_city(state_id):
+    """Creates a City object."""
     state = storage.get("State", state_id)
     if not state:
         abort(404)
-    new_city = request.get_json()
-    if not new_city:
-        abort(400, "Not a JSON")
-    if "name" not in new_city:
-        abort(400, "Missing name")
-    city = City(**new_city)
-    setattr(city, 'state_id', state_id)
-    storage.new(city)
+
+    new_city_data = request.get_json()
+    if not new_city_data or "name" not in new_city_data:
+        abort(400, "Invalid data. 'name' field is missing or not provided in JSON.")
+
+    new_city_data['state_id'] = state_id
+    new_city = City(**new_city_data)
+    storage.new(new_city)
     storage.save()
-    return make_response(jsonify(city.to_dict()), 201)
+
+    return jsonify(new_city.to_dict()), 201
